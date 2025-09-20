@@ -2,10 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Install uv first
+RUN pip install uv
+
+# Copy dependency files
 COPY pyproject.toml .
 COPY uv.lock .
-RUN pip install uv
-RUN uv sync --frozen
+
+# Install dependencies system-wide in container
+RUN uv sync --frozen --system
 
 COPY . .
 
