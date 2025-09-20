@@ -3,7 +3,7 @@ Pydantic models for the FastAPI application.
 """
 
 from datetime import datetime
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -55,8 +55,8 @@ class BulkItemUpdate(BaseModel):
 class HealthStatus(BaseModel):
     status: str
     timestamp: float
-    details: Dict[str, Union[int, str, bool, float]]
-    system_info: Dict[str, Union[str, float]]
+    details: Dict[str, Any]
+    system_info: Dict[str, Any]
 
 
 class SystemInfo(BaseModel):
