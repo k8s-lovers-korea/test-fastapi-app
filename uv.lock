@@ -931,6 +931,42 @@ wheels = [
 ]
 
 [[package]]
+name = "opentelemetry-instrumentation-system-metrics"
+version = "0.54b1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.9'",
+]
+dependencies = [
+    { name = "opentelemetry-api", version = "1.33.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "opentelemetry-instrumentation", version = "0.54b1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "psutil", marker = "python_full_version < '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/10/cc/0db64253beac5a58dca621114f1be8c95af3ec8ac31785fb28b6ed82021e/opentelemetry_instrumentation_system_metrics-0.54b1.tar.gz", hash = "sha256:2846ba1019e1672fb605eff3d3af198fa1b8f1540ece70da82a2d20d9b95779b", size = 15007, upload-time = "2025-05-16T19:04:03.758Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/fd/e9bd23fd734bbdc028e7ebe3d25855381b696ceca214f80ad7fe74e9079c/opentelemetry_instrumentation_system_metrics-0.54b1-py3-none-any.whl", hash = "sha256:1b6f23cc8cf18b525bdb285c3664b521ce81b1e82c4f3db6a82210b8c37af1e4", size = 13093, upload-time = "2025-05-16T19:03:08.516Z" },
+]
+
+[[package]]
+name = "opentelemetry-instrumentation-system-metrics"
+version = "0.58b0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.13'",
+    "python_full_version >= '3.10' and python_full_version < '3.13'",
+    "python_full_version == '3.9.*'",
+]
+dependencies = [
+    { name = "opentelemetry-api", version = "1.37.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "opentelemetry-instrumentation", version = "0.58b0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "psutil", marker = "python_full_version >= '3.9'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/15/2c/7a3abca5276f844648be3a30aba9307d9f35c2fe7be61f577e26eb94ffcf/opentelemetry_instrumentation_system_metrics-0.58b0.tar.gz", hash = "sha256:c34494bf10adbaee87b05af250f5028faeccaa02cc9366e09df7f0789ee18713", size = 15872, upload-time = "2025-09-11T11:42:55.166Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/23/b0/45253b4fb9661bd67bd7973fd49b4d60d8717dc26cfaefda66496c727b4e/opentelemetry_instrumentation_system_metrics-0.58b0-py3-none-any.whl", hash = "sha256:dea07801bffc3fd2bf84b2ec7bf7e4afca1e479a2f05a59e278ab8686a954a46", size = 13516, upload-time = "2025-09-11T11:41:57.441Z" },
+]
+
+[[package]]
 name = "opentelemetry-proto"
 version = "1.33.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1658,6 +1694,8 @@ dependencies = [
     { name = "opentelemetry-instrumentation-fastapi", version = "0.58b0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "opentelemetry-instrumentation-requests", version = "0.54b1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "opentelemetry-instrumentation-requests", version = "0.58b0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
+    { name = "opentelemetry-instrumentation-system-metrics", version = "0.54b1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
+    { name = "opentelemetry-instrumentation-system-metrics", version = "0.58b0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
     { name = "psutil" },
     { name = "pydantic", version = "2.10.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.9'" },
     { name = "pydantic", version = "2.11.9", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.9'" },
@@ -1693,6 +1731,7 @@ requires-dist = [
     { name = "opentelemetry-exporter-otlp", specifier = ">=0.45b0" },
     { name = "opentelemetry-instrumentation-fastapi", specifier = ">=0.45b0" },
     { name = "opentelemetry-instrumentation-requests", specifier = ">=0.45b0" },
+    { name = "opentelemetry-instrumentation-system-metrics", specifier = ">=0.54b1" },
     { name = "psutil", specifier = ">=5.9.6" },
     { name = "pydantic", specifier = ">=2.5.0" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=7.4.3" },
