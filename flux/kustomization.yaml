@@ -1,0 +1,31 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: test-fastapi-app
+  namespace: flux-system
+spec:
+  interval: 10m
+  sourceRef:
+    kind: OCIRepository
+    name: test-fastapi-app-manifests
+  path: "./"
+  prune: true
+  wait: true
+  timeout: 5m
+  targetNamespace: sample-apps
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: test-fastapi-app
+      namespace: sample-apps
+  postBuild:
+    substitute:
+      APP_VERSION: "latest"
+  patches:
+    - patch: |-
+        - op: replace
+          path: /spec/replicas
+          value: 2
+      target:
+        kind: Deployment
+        name: test-fastapi-app

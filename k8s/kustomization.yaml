@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: test-fastapi-app
+  annotations:
+    config.kubernetes.io/local-config: "true"
+
+resources:
+- deployment.yaml
+- service.yaml
+
+images:
+- name: IMAGE_TAG_PLACEHOLDER
+  newTag: latest
+
+commonLabels:
+  app.kubernetes.io/name: test-fastapi-app
+  app.kubernetes.io/component: backend
+  app.kubernetes.io/part-of: test-fastapi-app
+
+# Add common annotations
+commonAnnotations:
+  app.kubernetes.io/version: "0.1.0"
+  app.kubernetes.io/managed-by: "flux"
+
+# Patches for environment-specific configurations
+patchesStrategicMerge: []
+
+# ConfigMap generator for additional configs
+configMapGenerator: []
+
+# Secret generator for sensitive data
+secretGenerator: []

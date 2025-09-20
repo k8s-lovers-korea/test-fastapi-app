@@ -7,7 +7,7 @@ import logging
 from typing import List, Optional, Dict, Any
 from fastapi import HTTPException
 
-from config import Config
+from app.core.config import Config
 from app.models import TestEntity, TestEntityCreate, TestEntityUpdate
 
 logger = logging.getLogger(__name__)

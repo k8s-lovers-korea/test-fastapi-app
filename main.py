@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 
 # Import our modules
-from config import Config
+from app.core.config import Config
 from app.core.observability import setup_telemetry, instrument_fastapi_app
 from app.core.storage import startup_time
 from app.routers import items, simulation, actuator, entities, test_scenarios
