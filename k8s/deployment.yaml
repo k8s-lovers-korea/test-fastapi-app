@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: test-fastapi-app
-        image: IMAGE_TAG_PLACEHOLDER
+        image: ghcr.io/k8s-lovers-korea/test-fastapi-app:latest
         ports:
         - containerPort: 8000
           name: http
@@ -54,7 +54,7 @@ spec:
         # Health check configurations
         livenessProbe:
           httpGet:
-            path: /health
+            path: /healthz
             port: http
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -62,7 +62,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /health
+            path: /healthz
             port: http
           initialDelaySeconds: 5
           periodSeconds: 5

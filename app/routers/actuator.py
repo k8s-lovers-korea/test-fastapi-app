@@ -11,84 +11,13 @@ import psutil
 from datetime import datetime
 from fastapi import APIRouter, BackgroundTasks
 
-from app.models import HealthStatus
+
+# Removed complex Pydantic models - using simple dict responses for k8s health checks
 from app.core.storage import items_storage, blocked_threads, startup_time
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/actuator", tags=["💊 Actuator (FastAPI Internal)"])
-
-
-@router.get("/health", response_model=HealthStatus, summary="Health check endpoint")
-async def health():
-    """💊 **FastAPI Internal**: Comprehensive health check with detailed status information from the FastAPI application itself."""
-    logger.info("Health check requested")
-
-    # Check system health indicators
-    memory_info = psutil.virtual_memory()
-    cpu_percent = psutil.cpu_percent(interval=1)
-    disk_info = psutil.disk_usage("/")
-
-    # Application-specific health checks
-    items_count = len(items_storage)
-    blocked_count = len(blocked_threads)
-    uptime = (datetime.now() - startup_time).total_seconds()
-
-    # Determine overall status
-    status = "UP"
-    details = {}
-
-    # Memory check (warn if > 80%, critical if > 90%)
-    if memory_info.percent > 90:
-        status = "DOWN"
-        details["memory"] = {"status": "CRITICAL", "usage_percent": memory_info.percent}
-    elif memory_info.percent > 80:
-        details["memory"] = {"status": "WARNING", "usage_percent": memory_info.percent}
-    else:
-        details["memory"] = {"status": "UP", "usage_percent": memory_info.percent}
-
-    # CPU check (warn if > 85%, critical if > 95%)
-    if cpu_percent > 95:
-        status = "DOWN"
-        details["cpu"] = {"status": "CRITICAL", "usage_percent": cpu_percent}
-    elif cpu_percent > 85:
-        details["cpu"] = {"status": "WARNING", "usage_percent": cpu_percent}
-    else:
-        details["cpu"] = {"status": "UP", "usage_percent": cpu_percent}
-
-    # Disk check (warn if > 85%, critical if > 95%)
-    disk_percent = (disk_info.used / disk_info.total) * 100
-    if disk_percent > 95:
-        status = "DOWN"
-        details["disk"] = {"status": "CRITICAL", "usage_percent": disk_percent}
-    elif disk_percent > 85:
-        details["disk"] = {"status": "WARNING", "usage_percent": disk_percent}
-    else:
-        details["disk"] = {"status": "UP", "usage_percent": disk_percent}
-
-    # Application checks
-    details["application"] = {
-        "status": "UP",
-        "items_count": items_count,
-        "blocked_threads": blocked_count,
-        "uptime_seconds": round(uptime, 2),
-    }
-
-    # System info for the health status
-    system_info = {
-        "python_version": platform.python_version(),
-        "platform": f"{platform.system()} {platform.release()}",
-        "cpu_count": psutil.cpu_count(),
-        "memory_total": memory_info.total,
-        "memory_available": memory_info.available,
-    }
-
-    return HealthStatus(
-        status=status,
-        timestamp=datetime.now().timestamp(),
-        details=details,
-        system_info=system_info,
-    )
 
 
 @router.get("/info", summary="Application information")

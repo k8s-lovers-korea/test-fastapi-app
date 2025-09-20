@@ -7,6 +7,8 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
+from fastapi.responses import JSONResponse
+from datetime import datetime
 
 # Import our modules
 from app.core.config import Config
@@ -59,6 +61,7 @@ app = FastAPI(
     redoc_url=Config.REDOC_URL,
     openapi_url=Config.OPENAPI_URL,
 )
+
 
 app.openapi = custom_openapi
 
@@ -124,6 +127,14 @@ async def root():
             },
         },
     }
+
+
+@app.get("/healthz", tags=["General"], summary="K8s health check")
+async def healthz():
+    return JSONResponse(
+        status_code=200,
+        content={"status": "ok", "timestamp": datetime.now().isoformat()},
+    )
 
 
 if __name__ == "__main__":

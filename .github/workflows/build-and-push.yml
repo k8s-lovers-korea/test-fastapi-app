@@ -1,4 +1,4 @@
-name: Build and Push OCI Image with Kubernetes Manifests
+name: Build and Push Unified OCI Artifact
 
 on:
   push:
@@ -30,11 +30,10 @@ jobs:
       with:
         version: "latest"
 
-    - name: Log in to Container Registry
-      if: github.event_name != 'pull_request'
+    - name: Log in to GHCR
       uses: docker/login-action@v3
       with:
-        registry: ${{ env.REGISTRY }}
+        registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -44,61 +43,28 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=ref,event=branch
-          type=ref,event=pr
-          type=semver,pattern={{version}}
-          type=semver,pattern={{major}}.{{minor}}
-          type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
+    - name: Build and push base Docker image
+      uses: docker/build-push-action@v6
       with:
         context: .
         file: ./Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}
+        push: true
+        platforms: linux/amd64
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
 
-    - name: Update Kubernetes manifests with image tag
-      if: github.event_name != 'pull_request'
+    - name: APush manifests as OCI artifact
+      env:
+        DEST: ghcr.io/${{ github.repository }}:latest
       run: |
-        # Determine tag to use
-        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          TAG=${GITHUB_REF#refs/tags/}
-        else
-          TAG="main"  # Use main tag for consistency with app image
-        fi
-        
-        # Update the deployment manifest with the correct image tag
-        sed -i "s|IMAGE_TAG_PLACEHOLDER|${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${TAG}|g" k8s/deployment.yaml
-
-    - name: Create OCI artifact with Kubernetes manifests
-      if: github.event_name != 'pull_request'
-      run: |
-        # Install ORAS CLI
-        curl -LO https://github.com/oras-project/oras/releases/download/v1.1.0/oras_1.1.0_linux_amd64.tar.gz
-        tar -xzf oras_1.1.0_linux_amd64.tar.gz
-        chmod +x oras
-        
-        # Determine tag to use
-        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          TAG=${GITHUB_REF#refs/tags/}
-        else
-          TAG="main"
-        fi
-        
-        # Construct the full image name
-        MANIFEST_IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-manifests:${TAG}"
-        
-        # Push Kubernetes manifests as OCI artifact
-        ./oras push "${MANIFEST_IMAGE}" \
-          k8s/:application/vnd.k8s.yaml \
-          --annotation "org.opencontainers.image.title=Kubernetes Manifests for ${{ github.repository }}" \
-          --annotation "org.opencontainers.image.description=Kubernetes deployment manifests"
-        
-        echo "Pushed Kubernetes manifests to ${MANIFEST_IMAGE}"
+        oras push "$DEST" \
+          --artifact-type application/vnd.cncf.flux.config.v1+tar+gzip \
+          --annotation "org.opencontainers.image.title=sampleapp-manifests" \
+          --annotation "org.opencontainers.image.description=Kubernetes manifests for sampleapp (Deployment/Service)" \
+          --annotation "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+          dist/app.tgz:application/vnd.cncf.flux.config.v1+tar+gzip

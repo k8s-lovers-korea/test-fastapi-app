@@ -14,10 +14,12 @@ images:
 - name: IMAGE_TAG_PLACEHOLDER
   newTag: latest
 
-commonLabels:
-  app.kubernetes.io/name: test-fastapi-app
-  app.kubernetes.io/component: backend
-  app.kubernetes.io/part-of: test-fastapi-app
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/name: test-fastapi-app
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: test-fastapi-app
 
 # Add common annotations
 commonAnnotations:
@@ -25,7 +27,7 @@ commonAnnotations:
   app.kubernetes.io/managed-by: "flux"
 
 # Patches for environment-specific configurations
-patchesStrategicMerge: []
+patches: []
 
 # ConfigMap generator for additional configs
 configMapGenerator: []

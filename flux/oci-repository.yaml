@@ -1,13 +1,15 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: test-fastapi-app-manifests
+  name: test-fastapi-app
   namespace: flux-system
 spec:
-  interval: 5m
-  url: oci://ghcr.io/k8s-lovers-korea/test-fastapi-app-manifests
+  interval: 1m0s
+  url: oci://ghcr.io/k8s-lovers-korea/test-fastapi-app
   ref:
-    tag: main  # Matches the tag created by GitHub Actions for main branch
+    tag: main  # Uses the unified OCI artifact with attached Kubernetes manifests
   # Uncomment below if package is private:
   # secretRef:
   #   name: ghcr-credentials
+  layerSelector:
+    mediaType: "application/vnd.cncf.flux.config.v1+tar+gzip"

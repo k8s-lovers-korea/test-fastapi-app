@@ -7,7 +7,7 @@ spec:
   interval: 10m
   sourceRef:
     kind: OCIRepository
-    name: test-fastapi-app-manifests
+    name: test-fastapi-app
   path: "./"
   prune: true
   wait: true
@@ -18,14 +18,3 @@ spec:
       kind: Deployment
       name: test-fastapi-app
       namespace: sample-apps
-  postBuild:
-    substitute:
-      APP_VERSION: "latest"
-  patches:
-    - patch: |-
-        - op: replace
-          path: /spec/replicas
-          value: 2
-      target:
-        kind: Deployment
-        name: test-fastapi-app

@@ -14,7 +14,9 @@ COPY README.md .
 RUN uv export --format requirements-txt --no-hashes --no-editable > requirements.txt && \
     uv pip install --system -r requirements.txt
 
-COPY . .
+# Copy application code (this should invalidate cache when code changes)
+COPY main.py .
+COPY app/ ./app/
 
 EXPOSE 8000
 

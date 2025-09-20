@@ -2,8 +2,9 @@
 Pydantic models for the FastAPI application.
 """
 
+from __future__ import annotations
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -50,22 +51,6 @@ class ItemUpdateWithId(ItemUpdate):
 
 class BulkItemUpdate(BaseModel):
     updates: List[ItemUpdateWithId] = Field(..., min_length=1, max_length=100)
-
-
-class HealthStatus(BaseModel):
-    status: str
-    timestamp: float
-    details: Dict[str, Any]
-    system_info: Dict[str, Any]
-
-
-class SystemInfo(BaseModel):
-    python_version: str
-    platform: str
-    cpu_count: int
-    memory_total: int
-    memory_available: int
-    disk_usage: Dict[str, Union[int, float]]
 
 
 # TestEntity models for Spring Boot API integration
