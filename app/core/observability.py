@@ -15,7 +15,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
 # Import Config (avoid circular import by importing here)
-from config import Config
+from .config import Config
 
 logger = logging.getLogger(__name__)
 

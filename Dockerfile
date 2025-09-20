@@ -3,9 +3,9 @@ FROM python:3.11-slim
 WORKDIR /app
 
 COPY pyproject.toml .
-COPY pyproject.lock . # If you use a lock file; remove if not present
+COPY uv.lock .
 RUN pip install uv
-RUN uv pip install --system
+RUN uv sync --frozen
 
 COPY . .
 
