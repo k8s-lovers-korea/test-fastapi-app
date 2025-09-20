@@ -10,7 +10,7 @@ COPY pyproject.toml .
 COPY uv.lock .
 
 # Install dependencies system-wide in container
-RUN uv sync --frozen --system
+RUN uv pip install --system .
 
 COPY . .
 
